@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 互動式使用指南 - The Power of HTML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Syntax highlighting mock styles */
+        .code-block { font-family: 'Fira Code', monospace; font-size: 0.875rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 transition-colors duration-300 font-sans antialiased">
+
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="fixed top-6 right-6 z-50 p-3 rounded-full bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-all duration-300 group">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-brand-500" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+        </svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-brand-500" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+        </svg>
+    </button>
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="hidden md:flex flex-col w-72 h-full bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 shadow-sm z-40">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400">
+                    Claude Code
+                </h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">HTML 輸出實戰指南</p>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+                <a href="#intro" class="block px-4 py-3 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    1. 為什麼選擇 HTML？
+                </a>
+                <a href="#comparison" class="block px-4 py-3 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    2. Markdown vs HTML 比較
+                </a>
+                <a href="#advantages" class="block px-4 py-3 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    3. 五大核心優勢
+                </a>
+                <a href="#workflow" class="block px-4 py-3 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    4. HTML 產生工作流圖解
+                </a>
+                <a href="#prompts" class="block px-4 py-3 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/50 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    5. 實戰 Prompt 樣板庫
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700 text-xs text-center text-slate-400">
+                Based on "The Unreasonable Effectiveness of HTML"
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto h-full scroll-smooth bg-slate-50/50 dark:bg-slate-900/50 relative">
+            <div class="max-w-5xl mx-auto px-6 py-12 md:py-20 space-y-24">
+                
+                <!-- Section 1: Intro -->
+                <section id="intro" class="scroll-mt-20">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-600 bg-brand-100 dark:bg-brand-900/30 dark:text-brand-400 rounded-full">Paradigm Shift</span>
+                        <h2 class="mt-4 text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight sm:text-5xl">
+                            當 AI 開啟了 HTML 的潛力
+                        </h2>
+                        <p class="mt-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+                            在 AI 時代，我們閱讀的不再只是冰冷的原始碼，而是 AI 理解後呈現的內容。Markdown 的表達力已經碰觸到天花板。這份指南將告訴您，如何讓 Claude 使用 HTML 釋放 <strong>視覺豐富度</strong>、<strong>互動性</strong> 與 <strong>結構化佈局</strong>。
+                        </p>
+                    </div>
+
+                    <!-- Callout Component -->
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 p-6 rounded-r-xl shadow-sm">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-0.5">
+                                <svg class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-indigo-900 dark:text-indigo-300">為什麼要這份指南？</h3>
+                                <div class="mt-2 text-indigo-800 dark:text-indigo-200/80 leading-relaxed">
+                                    這份 HTML 檔案本身就是一個展示。它完全由 AI 生成，運用了單一檔案結構、Tailwind CSS 佈局、深淺色模式與互動元件，這正是您未來可以要求 Claude 做到的事情。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Comparison (Side-by-side Table using CSS Grid) -->
+                <section id="comparison" class="scroll-mt-20">
+                    <h2 class="text-3xl font-bold mb-8 text-slate-900 dark:text-white flex items-center">
+                        <span class="w-8 h-8 rounded-lg bg-brand-500 text-white flex items-center justify-center mr-3 text-lg">2</span>
+                        Markdown vs. HTML
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Markdown Card -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-8 hover:shadow-md transition-shadow">
+                            <div class="flex items-center mb-6">
+                                <div class="p-3 bg-slate-100 dark:bg-slate-700 rounded-xl">
+                                    <svg class="w-6 h-6 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                </div>
+                                <h3 class="ml-4 text-xl font-bold text-slate-800 dark:text-slate-100">傳統 Markdown</h3>
+                            </div>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <span class="ml-3 text-slate-600 dark:text-slate-400"><strong>超過百行難以閱讀</strong>：長篇純文字容易讓人失去耐心。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <span class="ml-3 text-slate-600 dark:text-slate-400"><strong>表達力侷限</strong>：無法表達顏色、多欄並排，只能依賴粗糙的 ASCII 符號。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    <span class="ml-3 text-slate-600 dark:text-slate-400"><strong>分享不便</strong>：瀏覽器無法原生良好渲染 <code>.md</code>，需額外工具轉檔。</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- HTML Card -->
+                        <div class="bg-gradient-to-br from-white to-brand-50 dark:from-slate-800 dark:to-slate-800/80 rounded-2xl shadow-lg border border-brand-200 dark:border-brand-500/30 p-8 transform md:-translate-y-2 hover:shadow-xl transition-all">
+                            <div class="flex items-center mb-6">
+                                <div class="p-3 bg-brand-100 dark:bg-brand-900/50 rounded-xl">
+                                    <svg class="w-6 h-6 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                </div>
+                                <h3 class="ml-4 text-xl font-bold text-slate-800 dark:text-slate-100">AI 時代的 HTML</h3>
+                            </div>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span class="ml-3 text-slate-700 dark:text-slate-300"><strong>無限視覺豐富度</strong>：內嵌 SVG 圖表、顏色編碼與高質感排版。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span class="ml-3 text-slate-700 dark:text-slate-300"><strong>強大的結構化佈局</strong>：使用 CSS Grid 並排比較，添加頁內錨點與分頁。</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="w-5 h-5 text-emerald-500 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    <span class="ml-3 text-slate-700 dark:text-slate-300"><strong>極度便攜易分享</strong>：存成單一 <code>.html</code>，任何裝置連按兩下瀏覽器即開。</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: 5 Key Advantages (Cards Layout) -->
+                <section id="advantages" class="scroll-mt-20">
+                    <h2 class="text-3xl font-bold mb-8 text-slate-900 dark:text-white flex items-center">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center mr-3 text-lg">3</span>
+                        HTML 的五大核心優勢
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Advantage 1 -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center mb-4">
+                                <span class="text-pink-600 dark:text-pink-400 text-xl">🎨</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-800 dark:text-white">視覺豐富度</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">不再只有黑白文字。利用顏色標示風險（紅黃綠）、加入陰影層次，或使用帶有圖示的警示框（Callouts）來凸顯重點。</p>
+                        </div>
+                        
+                        <!-- Advantage 2 -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4">
+                                <span class="text-amber-600 dark:text-amber-400 text-xl">📊</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-800 dark:text-white">原生 SVG 繪圖</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">不需依賴外部圖片連結。AI 可以直接在 HTML 內寫出精美的 SVG 向量圖表、系統架構圖，且可無限放大不失真。</p>
+                        </div>
+
+                        <!-- Advantage 3 -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center mb-4">
+                                <span class="text-cyan-600 dark:text-cyan-400 text-xl">🧭</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-800 dark:text-white">結構化導航</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">就像您左側看到的目錄一樣。透過頁內錨點、分頁標籤（Tabs），將萬字長文整理得井井有條。</p>
+                        </div>
+
+                        <!-- Advantage 4 -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mb-4">
+                                <span class="text-violet-600 dark:text-violet-400 text-xl">👆</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-800 dark:text-white">雙向互動性</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">內建微型 JavaScript，可實現折疊選單（Accordion）、過濾器、簡易動畫，讓閱讀變成一種探索體驗。</p>
+                        </div>
+
+                        <!-- Advantage 5 -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 sm:col-span-2 lg:col-span-1">
+                            <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
+                                <span class="text-emerald-600 dark:text-emerald-400 text-xl">🚀</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-800 dark:text-white">分享極致簡單</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">一鍵複製所有程式碼，存成一個 <code>.html</code> 檔案發給同事。無需裝任何環境、套件或外掛，全球通用。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Workflow SVG Diagram -->
+                <section id="workflow" class="scroll-mt-20">
+                    <h2 class="text-3xl font-bold mb-8 text-slate-900 dark:text-white flex items-center">
+                        <span class="w-8 h-8 rounded-lg bg-rose-500 text-white flex items-center justify-center mr-3 text-lg">4</span>
+                        HTML 產生工作流
+                    </h2>
+                    
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 text-center overflow-x-auto">
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 text-left">以下架構圖展示了我們如何從需求到最終產出精美報告（此圖完全由 SVG 在單一檔案中繪製）：</p>
+                        <!-- Embedded SVG -->
+                        <svg class="mx-auto" width="700" height="200" viewBox="0 0 700 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Definition of markers -->
+                            <defs>
+                                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" class="fill-slate-400 dark:fill-slate-500" />
+                                </marker>
+                            </defs>
+                            
+                            <!-- Box 1 -->
+                            <rect x="20" y="70" width="140" height="60" rx="10" class="fill-indigo-50 dark:fill-indigo-900/50 stroke-indigo-400" stroke-width="2"/>
+                            <text x="90" y="100" text-anchor="middle" class="fill-indigo-900 dark:fill-indigo-200 font-medium text-sm">設計提示詞</text>
+                            <text x="90" y="118" text-anchor="middle" class="fill-indigo-600 dark:fill-indigo-400 text-xs">(附加 HTML 規範)</text>
+
+                            <!-- Line 1 -->
+                            <line x1="160" y1="100" x2="240" y2="100" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="2" stroke-dasharray="5,5" marker-end="url(#arrow)"/>
+                            
+                            <!-- Box 2 -->
+                            <rect x="250" y="60" width="180" height="80" rx="10" class="fill-brand-50 dark:fill-brand-900/50 stroke-brand-500" stroke-width="2"/>
+                            <text x="340" y="90" text-anchor="middle" class="fill-brand-900 dark:fill-brand-100 font-bold text-base">Claude / Claude Code</text>
+                            <text x="340" y="110" text-anchor="middle" class="fill-brand-700 dark:fill-brand-300 text-xs">執行邏輯推演與程式碼編寫</text>
+                            <text x="340" y="125" text-anchor="middle" class="fill-brand-700 dark:fill-brand-300 text-xs">(組合 CSS + HTML + JS)</text>
+
+                            <!-- Line 2 -->
+                            <line x1="430" y1="100" x2="510" y2="100" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="2" marker-end="url(#arrow)"/>
+                            
+                            <!-- Box 3 -->
+                            <rect x="520" y="70" width="140" height="60" rx="10" class="fill-emerald-50 dark:fill-emerald-900/50 stroke-emerald-500" stroke-width="2"/>
+                            <text x="590" y="100" text-anchor="middle" class="fill-emerald-900 dark:fill-emerald-200 font-medium text-sm">瀏覽器完美渲染</text>
+                            <text x="590" y="118" text-anchor="middle" class="fill-emerald-700 dark:fill-emerald-400 text-xs">無需外掛即可閱讀</text>
+                        </svg>
+                    </div>
+                </section>
+
+                <!-- Section 5: Practical Prompts -->
+                <section id="prompts" class="scroll-mt-20">
+                    <h2 class="text-3xl font-bold mb-8 text-slate-900 dark:text-white flex items-center">
+                        <span class="w-8 h-8 rounded-lg bg-teal-500 text-white flex items-center justify-center mr-3 text-lg">5</span>
+                        可實現的 Prompt 樣板庫
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 mb-8">
+                        只要在您與 Claude 對話的結尾，附上以下任一結構的提示詞，就能啟動其強大的網頁渲染能力。<strong>(點擊右上角按鈕複製)</strong>
+                    </p>
+
+                    <div class="space-y-8">
+                        <!-- Prompt 1 -->
+                        <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-800">
+                            <div class="flex items-center justify-between px-4 py-3 bg-[#2d2d2d] border-b border-slate-700">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                    <span class="ml-2 text-sm font-medium text-slate-300">1. 通用型富文本解釋 (最基礎、最好用)</span>
+                                </div>
+                                <button onclick="copyCode(this, 'prompt1')" class="text-slate-400 hover:text-white transition-colors flex items-center text-xs">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    複製
+                                </button>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre id="prompt1" class="code-block text-slate-300 whitespace-pre-wrap">
+請將上述內容輸出為一個獨立的 HTML 檔案。請充分發揮 HTML、CSS 和 JavaScript 的完整能力，加入豐富的視覺設計與互動性。
+具體要求：
+1. 包含精美且易讀的 CSS 樣式（例如提供深色/淺色主題，或使用高質感的卡片式排版）。
+2. 使用頁內導航（如側邊欄、錨點或分頁 Tabs）來組織資訊，避免冗長的線性閱讀。
+3. 對於關鍵數據或對比，請使用並排比較表（Side-by-side tables）或有顏色的提示框（Callout）。
+4. 如果涉及流程，請直接內嵌 SVG 圖表。
+5. 確保這是一個乾淨、單一文件的 HTML，我可以直接用瀏覽器打開閱讀。
+</pre>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 2 -->
+                        <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-800">
+                            <div class="flex items-center justify-between px-4 py-3 bg-[#2d2d2d] border-b border-slate-700">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                    <span class="ml-2 text-sm font-medium text-slate-300">2. 程式碼審查與漏洞分析 (Code Review / PR)</span>
+                                </div>
+                                <button onclick="copyCode(this, 'prompt2')" class="text-slate-400 hover:text-white transition-colors flex items-center text-xs">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    複製
+                                </button>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre id="prompt2" class="code-block text-slate-300 whitespace-pre-wrap">
+請幫我審查這段程式碼/這個 PR（貼上程式碼或描述）。
+請產出一個 HTML 檔案來呈現審查結果：
+1. 針對程式碼的變更或缺陷，請使用類似程式碼編輯器的並排對照（Diff View）或行內註釋（Margin Annotations）。
+2. 請用「顏色編碼」來區分發現的問題嚴重性（例如：紅色代表高風險、黃色代表中風險、綠色代表建議）。
+3. 如果涉及複雜的資料流、異步邏輯或背壓（Backpressure）機制，請直接用內嵌的 SVG 圖表畫出資料拓撲或狀態機。
+4. 加入可折疊的區塊（Accordion），讓我可以點擊展開查看詳細的修復程式碼。
+</pre>
+                            </div>
+                        </div>
+
+                        <!-- Prompt 3 -->
+                        <div class="bg-[#1e1e1e] rounded-xl overflow-hidden shadow-lg border border-slate-800">
+                            <div class="flex items-center justify-between px-4 py-3 bg-[#2d2d2d] border-b border-slate-700">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                    <span class="ml-2 text-sm font-medium text-slate-300">3. 系統規格書與產品規劃 (PRD / 架構探索)</span>
+                                </div>
+                                <button onclick="copyCode(this, 'prompt3')" class="text-slate-400 hover:text-white transition-colors flex items-center text-xs">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    複製
+                                </button>
+                            </div>
+                            <div class="p-4 overflow-x-auto">
+<pre id="prompt3" class="code-block text-slate-300 whitespace-pre-wrap">
+我們準備設計一個【填入你的專案/系統，例如：ITSM 系統的資料庫排程管理模組】。
+請為我生成一份 HTML 格式的系統規格書與架構探索計畫：
+1. 提供清晰的資訊層級，最上方要有目錄與頁內錨點連結。
+2. 包含一個系統元件互動的 SVG 架構圖。
+3. 對於功能需求與非功能需求，請用多欄位（CSS Grid）並排呈現，並使用 Callout 框標記核心痛點。
+4. 請提供一個簡易的互動式 Mockup（可以用簡單的 HTML/CSS 按鈕或選單），讓我直觀感受使用者介面的操作流程。
+</pre>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+                
+                <footer class="pt-12 pb-24 border-t border-slate-200 dark:border-slate-800 text-center text-slate-500 dark:text-slate-400">
+                    <p class="mb-2 text-lg font-medium">💡 實戰小建議</p>
+                    <p class="text-sm max-w-2xl mx-auto">
+                        當 AI 輸出 HTML 程式碼後，您只需開啟純文字編輯器 (如 Notepad, VS Code) 貼上程式碼，並將副檔名儲存為 <code>.html</code>（例如 <code>report.html</code>），連按兩下即可在瀏覽器中看見極其精美的互動式報告！
+                    </p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Check initial theme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            lightIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            darkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            // toggle icons
+            darkIcon.classList.toggle('hidden');
+            lightIcon.classList.toggle('hidden');
+
+            // toggle theme
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+
+        // Copy Code Functionality
+        function copyCode(btnElement, elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            // Temporary textarea to handle the copy command
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                // Visual feedback
+                const originalHTML = btnElement.innerHTML;
+                btnElement.innerHTML = `<svg class="w-4 h-4 mr-1 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span class="text-emerald-400">已複製</span>`;
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHTML;
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text', err);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
